@@ -1,1 +1,35 @@
-(index.html is a source file, so no changes needed to .gitignore)
+```
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# Editors
+.vscode/
+.idea/
+
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Build artifacts
+dist/
+build/
+*.o
+*.obj
+*.so
+*.dll
+*.exe
+
+# System files
+.DS_Store
+Thumbs.db
+```
