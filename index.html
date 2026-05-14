@@ -423,6 +423,11 @@
             .clil-visual { order: 2; margin-top: 20px; }
             .clil-text { order: 1; }
             .slider-btn { width: 40px; height: 40px; font-size: 1rem; }
+            .clil-video-container {
+                width: 150%;
+                max-width: 150%;
+                margin: 0 auto;
+            }
         }
 
         /* Animation */
@@ -606,19 +611,61 @@
         </div>
     </footer>
 
-    <script>
+<script>
         let currentSlide = 0;
         const totalSlides = 2;
+        const videoStates = {}; // Хранение состояния каждого видео (время паузы)
+
+        // Функция для получения iframe из слайда
+        function getIframeFromSlide(index) {
+            const slides = document.querySelectorAll('.slide');
+            if (slides[index]) {
+                return slides[index].querySelector('iframe');
+            }
+            return null;
+        }
+
+        // Функция для остановки видео и сохранения позиции
+        function pauseAndSaveVideo(index) {
+            const iframe = getIframeFromSlide(index);
+            if (iframe) {
+                // Отправляем сообщение iframe для паузы (RuTube поддерживает postMessage API)
+                iframe.contentWindow.postMessage(JSON.stringify({
+                    type: 'pause'
+                }), '*');
+                
+                // Сохраняем текущее время воспроизведения (если доступно через API)
+                // Для RuTube используем подход с сохранением индекса активного слайда
+                videoStates[index] = videoStates[index] || 0;
+            }
+        }
+
+        // Функция для возобновления видео с сохраненной позиции
+        function resumeVideo(index) {
+            const iframe = getIframeFromSlide(index);
+            if (iframe && videoStates[index] !== undefined) {
+                // Отправляем сообщение iframe для воспроизведения с определенной позиции
+                // Примечание: RuTube embed API имеет ограничения, поэтому мы полагаемся на встроенный плеер
+                // который запоминает последнюю позицию при паузе
+            }
+        }
 
         function updateSlider() {
             const track = document.getElementById('videoSliderTrack');
             const dots = document.querySelectorAll('.dot');
-            
+
+            // Останавливаем видео на текущем слайде перед переключением
+            pauseAndSaveVideo(currentSlide);
+
             track.style.transform = `translateX(-${currentSlide * 100}%)`;
-            
+
             dots.forEach((dot, index) => {
                 dot.classList.toggle('active', index === currentSlide);
             });
+
+            // Возобновляем видео на новом слайде (если нужно)
+            // Примечание: авто-воспроизведение может быть заблокировано браузером
+            // resumeVideo(currentSlide);
         }
 
         function nextSlide() {
@@ -632,10 +679,12 @@
         }
 
         function goToSlide(index) {
+            // Останавливаем видео на текущем слайде
+            pauseAndSaveVideo(currentSlide);
+            
             currentSlide = index;
             updateSlider();
         }
-
         // Smooth scroll for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
