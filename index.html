@@ -242,8 +242,96 @@
         .clil-visual {
             flex: 1;
             text-align: center;
-            font-size: clamp(4rem, 10vw, 8rem);
             min-width: 200px;
+        }
+
+        .video-slider-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .slider-wrapper {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .slider-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .slide {
+            min-width: 100%;
+            position: relative;
+        }
+
+        .clil-video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            height: 0;
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .clil-video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .slider-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .slider-btn {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s, background 0.3s;
+            box-shadow: 0 4px 10px rgba(255, 140, 0, 0.3);
+        }
+
+        .slider-btn:hover {
+            transform: scale(1.1);
+            background: var(--secondary);
+        }
+
+        .slider-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ddd;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        .dot.active {
+            background: var(--primary);
+            transform: scale(1.2);
         }
 
         /* Pricing */
@@ -332,6 +420,9 @@
             .clil-list li { text-align: left; }
             .nav-links { display: none; }
             .clil-section { margin: 0 10px; padding: 40px 25px; }
+            .clil-visual { order: 2; margin-top: 20px; }
+            .clil-text { order: 1; }
+            .slider-btn { width: 40px; height: 40px; font-size: 1rem; }
         }
 
         /* Animation */
@@ -403,7 +494,32 @@
                             <li>Язык усваивается через практику, а не теорию</li>
                         </ul>
                     </div>
-                    <div class="clil-visual animate delay-1">🌍</div>
+                    <div class="clil-visual animate delay-1">
+                        <div class="video-slider-container">
+                            <div class="slider-wrapper">
+                                <div class="slider-track" id="videoSliderTrack">
+                                    <div class="slide">
+                                        <div class="clil-video-container">
+                                            <iframe src="https://rutube.ru/play/embed/64b742ca0ece83d1224777be5af8fc46/?p=zgtWHOVyp8gT9kE_Eyw9fQ" frameborder="0" allow="clipboard-write; autoplay" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+                                        </div>
+                                    </div>
+                                    <div class="slide">
+                                        <div class="clil-video-container">
+                                            <iframe src="https://rutube.ru/play/embed/0555a0aa2d6d6c56c90eacc433675cd5/" frameborder="0" allow="clipboard-write; autoplay" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slider-controls">
+                                <button class="slider-btn" onclick="prevSlide()">&#10094;</button>
+                                <button class="slider-btn" onclick="nextSlide()">&#10095;</button>
+                            </div>
+                            <div class="slider-dots" id="sliderDots">
+                                <span class="dot active" onclick="goToSlide(0)"></span>
+                                <span class="dot" onclick="goToSlide(1)"></span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -491,6 +607,35 @@
     </footer>
 
     <script>
+        let currentSlide = 0;
+        const totalSlides = 2;
+
+        function updateSlider() {
+            const track = document.getElementById('videoSliderTrack');
+            const dots = document.querySelectorAll('.dot');
+            
+            track.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateSlider();
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            updateSlider();
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            updateSlider();
+        }
+
         // Smooth scroll for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
