@@ -242,8 +242,24 @@
         .clil-visual {
             flex: 1;
             text-align: center;
-            font-size: clamp(4rem, 10vw, 8rem);
             min-width: 200px;
+        }
+
+        .clil-video-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .clil-video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
         }
 
         /* Pricing */
@@ -332,6 +348,7 @@
             .clil-list li { text-align: left; }
             .nav-links { display: none; }
             .clil-section { margin: 0 10px; padding: 40px 25px; }
+            .clil-visual { order: -1; }
         }
 
         /* Animation */
@@ -444,7 +461,11 @@
                             <li>Язык усваивается через практику, а не теорию</li>
                         </ul>
                     </div>
-                    <div class="clil-visual animate delay-1">🧠🌍</div>
+                    <div class="clil-visual animate delay-1">
+                        <div class="clil-video-wrapper">
+                            <iframe src="https://rutube.ru/play/embed/64b742ca0ece83d1224777be5af8fc46/?p=zgtWHOVyp8gT9kE_Eyw9fQ" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
